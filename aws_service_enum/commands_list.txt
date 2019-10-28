@@ -1,0 +1,598 @@
+
+#aws s3
+aws s3 list-buckets 
+
+# aws ec2
+
+aws ec2 describe-addresses
+aws ec2 describe-bundle-tasks
+aws ec2 describe-internet-gateways
+aws ec2 describe-moving-addresses
+aws ec2 describe-nat-gateways
+aws ec2 describe-network-acls
+aws ec2 describe-regions
+aws ec2 describe-snapshots
+
+# aws rds
+aws rds describe-certificates
+aws rds describe-account-attributes
+aws rds describe-event-categories#
+aws rds describe-event-subscriptions
+aws rds describe-reserved-db-instances
+aws rds describe-source-regions
+
+# aws elasticbeanstalk
+
+aws elasticbeanstalk list-available-solution-stacks
+
+# aws cloudwatch
+
+# aws sqs
+
+aws sqs list-queues
+
+# aws sns
+
+aws sns list-subscriptions
+aws sns list-topics
+
+# aws route53domains
+
+aws route53domains list-domains
+aws route53domains list-operations
+aws route53domains view-billing
+
+# aws route53
+aws route53 get-checker-ip-ranges
+aws route53 get-health-check-count
+aws route53 get-hosted-zone-count
+
+# aws lambda
+
+aws lambda get-account-settings
+
+# aws cloudfront 
+
+aws cloudfront list-distributions
+aws cloudfront list-public-keys
+aws cloudfront list-streaming-distributions
+
+# aws lightsail
+aws lightsail get-blueprints
+aws lightsail get-bundles
+aws lightsail get-cloud-formation-stack-records
+aws lightsail get-disk-snapshots
+aws lightsail get-domains
+aws lightsail get-instances
+aws lightsail get-operations
+
+# aws iam 
+
+aws iam generate-credential-report
+aws iam get-account-authorization-details
+aws iam get-account-password-policy
+aws iam get-account-summary
+aws iam get-credential-report
+aws iam list-account-aliases
+aws iam list-groups
+aws iam list-instance-profiles
+aws iam list-mfa-devices
+aws iam list-policies
+aws iam list-saml-providers
+aws iam list-server-certificates
+aws iam list-users
+
+# aws acm
+
+aws acm list-certificates
+
+# aws acm-pca
+
+#aws acm-pca list-certificate-authorities --max-results 10
+
+#aws amplify
+
+#aws amplify list-apps
+
+# aws apigateway
+
+aws apigateway get-account
+aws apigateway get-api-keys
+aws apigateway get-client-certificates
+aws apigateway get-domain-names
+aws apigateway get-rest-apis
+aws apigateway get-usage-plans
+
+# aws appmesh
+
+#aws appmesh list-meshes
+
+# aws appstream
+
+# aws appsync
+
+# aws athena
+
+aws athena list-named-queries
+aws athena list-query-executions
+
+# aws backup
+
+aws backup list-backup-jobs
+aws backup list-backup-plan-templates
+aws backup list-backup-plans
+aws backup list-backup-vaults
+aws backup list-protected-resources
+aws backup list-restore-jobs
+
+# aws batch
+
+aws batch list-jobs
+
+# aws chime
+
+aws chime list-accounts
+
+#aws cloud9
+
+aws cloud9 list-environments
+
+#aws clouddirectory
+
+aws clouddirectory list-directories
+aws clouddirectory list-development-schema-arns
+
+#aws cloudformation
+
+aws cloudformation list-exports
+aws cloudformation list-stacks
+aws cloudformation list-stack-sets
+
+#aws cloudhsm
+
+aws cloudhsm list-available-zones
+aws cloudhsm list-hapgs
+aws cloudhsm list-hsms
+aws cloudhsm list-luna-clients
+
+# aws cloudsearch 
+
+aws cloudsearch list-domain-names
+
+# aws codebuild
+
+aws codebuild list-builds
+aws codebuild list-projects
+aws codebuild list-source-credentials
+
+#aws codecommit
+
+aws codecommit list-repositories
+
+# aws pipeline
+
+aws codepipeline list-pipelines
+aws codepipeline list-action-types
+aws codepipeline list-webhooks
+
+# aws codestar
+
+aws codestar list-projects
+aws codestar list-user-profiles
+
+#aws cognito-identity
+
+#aws cognito-identity list-identity-pools --max-results=100
+
+#aws cognito-idp
+
+aws cognito-idp list-user-pools --max-results=100
+
+#aws comprehend
+
+aws comprehend list-document-classification-jobs
+aws comprehend list-document-classifiers
+aws comprehend list-dominant-language-detection-jobs
+aws comprehend list-entities-detection-jobs
+aws comprehend list-entity-recognizers
+aws comprehend list-key-phrases-detection-jobs
+aws comprehend list-sentiment-detection-jobs
+aws comprehend list-topics-detection-jobs
+
+#aws datapipeline
+
+aws datapipeline list-pipelines
+
+#aws datasync
+
+aws datasync list-agents
+aws datasync list-locations
+aws datasync list-task-executions
+aws datasync list-tasks
+
+#aws deploy
+
+#aws deploy list-applications
+#aws deploy list-deployment-configs
+#aws deploy list-deployment-targets
+#aws deploy list-deployments
+#aws deploy list-git-hub-account-token-names
+#aws deploy list-on-premises-instances
+
+#aws devicefarm
+
+#aws devicefarm list-device-instances
+#aws devicefarm list-devices
+#aws devicefarm list-instance-profiles
+#aws devicefarm list-offering-promotions
+#aws devicefarm list-offering-transactions
+#aws devicefarm list-offerings
+#aws devicefarm list-projects
+#aws devicefarm list-vpce-configurations
+
+#aws ds 
+
+aws ds list-log-subscriptions
+
+#aws dynanodb
+
+aws dynamodb list-tables
+aws dynamodb list-global-tables
+aws dynamodb list-backups
+
+#aws dynamodbstreams
+
+aws dynamodbstreams list-streams
+
+#aws elastictranscoder
+
+aws elastictranscoder list-pipelines
+aws elastictranscoder list-presets
+
+#aws emr
+
+aws emr list-clusters
+aws emr list-security-configurations
+
+#aws es
+
+aws es list-domain-names
+aws es list-elasticsearch-versions
+
+#aws events
+
+aws events list-rules
+
+#aws firehose
+
+aws firehose list-delivery-streams
+
+#aws fms
+
+aws fms list-member-accounts
+aws fms list-policies
+
+#aws gamelift 
+
+aws gamelift list-aliases
+aws gamelift list-builds
+aws gamelift list-fleets
+
+#aws globalaccelerator 
+
+aws globalaccelerator list-accelerators
+
+#aws greengrass 
+
+aws greengrass list-groups
+aws greengrass list-function-definitions
+aws greengrass list-device-definitions
+aws greengrass list-core-definitions
+aws greengrass list-connector-definitions
+aws greengrass list-bulk-deployments
+
+#aws guardduty 
+
+aws guardduty get-invitations-count
+aws guardduty list-detectors
+aws guardduty list-invitations
+
+#aws history
+
+#aws history list
+
+#aws importexport
+
+aws importexport list-jobs
+
+#aws iot1click-devices
+
+aws iot1click-devices list-devices
+
+#aws iot1click-projects
+
+aws iot1click-projects list-projects
+
+#aws kafka
+
+aws kafka list-clusters
+
+#aws kinesisvideo
+
+aws kinesisvideo list-streams
+
+#aws inspector
+
+aws inspector list-assessment-runs
+aws inspector list-assessment-targets
+aws inspector list-assessment-templates
+aws inspector list-findings
+aws inspector list-rules-packages
+
+#aws kinesis
+
+aws kinesis list-shards
+aws kinesis list-streams
+
+#aws kinesisanalytics
+
+aws kinesisanalytics list-applications
+
+#aws kinesisanalyticsv2
+
+aws kinesisanalyticsv2 list-applications
+
+# aws kms
+
+aws kms list-aliases
+aws kms list-keys
+
+#aws iotanalytics
+
+aws iotanalytics list-channels
+aws iotanalytics list-datasets
+aws iotanalytics list-datastores
+aws iotanalytics list-pipelines
+
+#aws iot
+
+aws iot get-logging-options
+aws iot get-indexing-configuration
+aws iot list-active-violations
+aws iot list-certificates
+aws iot list-indices
+aws iot list-jobs
+aws iot list-ota-updates
+aws iot list-outgoing-certificates
+aws iot list-policies
+aws iot list-things
+aws iot list-v2-logging-levels
+
+#aws lex-models
+
+aws lex-models get-bots
+
+#aws license-manager
+
+aws license-manager list-license-configurations
+
+#aws macie
+
+aws macie list-member-accounts
+aws macie list-s3-resources
+
+#aws mediapackage
+
+aws mediapackage list-channels
+aws mediapackage list-origin-endpoints
+
+#aws mediastore-data
+
+aws mediastore-data list-items
+
+#aws mediatailor
+
+aws mediatailor list-playback-configurations
+
+#aws polly
+
+aws polly list-lexicons
+aws polly list-speech-synthesis-tasks
+
+# aws pinpoint-email
+
+aws pinpoint-email list-dedicated-ip-pools
+aws pinpoint-email list-configuration-sets
+aws pinpoint-email list-deliverability-test-reports
+aws pinpoint-email list-email-identities
+aws pinpoint-email get-dedicated-ips
+
+#aws organizations
+
+aws organizations list-accounts
+aws organizations list-aws-service-access-for-organization
+aws organizations list-create-account-status
+aws organizations list-handshakes-for-account
+aws organizations list-roots
+
+#aws mturk
+
+aws mturk list-bonus-payments
+aws mturk list-hits
+aws mturk list-qualification-requests
+aws mturk list-reviewable-hits
+aws mturk list-worker-blocks
+
+#aws mq
+
+aws mq list-brokers
+aws mq list-configurations
+
+#aws mobile
+
+#aws mobile create-project
+aws mobile list-bundles
+aws mobile list-projects
+
+#aws mgh
+
+aws mgh list-migration-tasks
+aws mgh list-progress-update-streams
+
+#aws mediastore
+
+aws mediastore list-containers
+
+#aws medialive
+
+aws medialive list-channels
+aws medialive list-input-security-groups
+aws medialive list-inputs
+aws medialive list-offerings
+aws medialive list-reservations
+
+#aws mediaconvert
+
+aws mediaconvert list-job-templates
+aws mediaconvert list-jobs
+aws mediaconvert list-presets
+aws mediaconvert list-queues
+
+#aws mediaconnect
+
+aws mediaconnect list-entitlements
+aws mediaconnect list-flows
+
+#aws translate
+
+aws translate list-terminologies
+
+#aws transcribe
+
+aws transcribe list-vocabularies
+aws transcribe list-transcription-jobs
+
+#aws signer
+aws signer list-signing-jobs
+aws signer list-signing-platforms
+aws signer list-signing-profiles
+
+#aws shield
+
+aws shield list-attacks
+aws shield list-protections
+
+#aws sdb
+
+aws sdb get-attributes
+aws sdb list-domains
+
+#aws sagemaker
+
+aws sagemaker list-algorithms
+aws sagemaker list-code-repositories
+aws sagemaker list-compilation-jobs
+aws sagemaker list-endpoint-configs
+aws sagemaker list-endpoints
+aws sagemaker list-hyper-parameter-tuning-jobs
+aws sagemaker list-labeling-jobs
+aws sagemaker list-model-packages
+aws sagemaker list-models
+aws sagemaker list-notebook-instance-lifecycle-configs
+aws sagemaker list-notebook-instances
+aws sagemaker list-subscribed-workteams
+aws sagemaker list-training-jobs
+aws sagemaker list-transform-jobs
+aws sagemaker list-workteams
+
+#aws secretsmanager
+
+aws secretsmanager list-secrets
+
+#aws securityhub
+
+aws securityhub get-findings
+aws securityhub get-insights
+aws securityhub list-invitations
+aws securityhub list-members
+
+#aws serverlessrepo
+
+aws serverlessrepo list-applications
+
+#aws servicecatalog
+
+aws servicecatalog list-portfolios
+aws servicecatalog list-record-history
+aws servicecatalog list-service-actions
+
+#aws servicediscovery
+
+aws servicediscovery list-namespaces
+aws servicediscovery list-operations
+aws servicediscovery list-services
+
+#aws sms
+
+aws sms get-connectors
+aws sms get-servers
+aws sms list-apps
+
+#aws snowball
+
+aws snowball list-clusters
+aws snowball list-compatible-images
+aws snowball list-jobs
+
+#aws ssm
+
+aws ssm list-commands
+aws ssm list-compliance-items
+aws ssm list-compliance-summaries
+
+#aws stepfunctions
+
+aws stepfunctions list-activities
+aws stepfunctions list-state-machines
+
+#aws storagegateway
+
+aws storagegateway list-gateways
+
+#aws transfer
+
+aws transfer list-servers
+
+#aws waf
+
+aws waf list-ip-sets
+aws waf list-geo-match-sets
+aws waf list-byte-match-sets
+aws waf list-rate-based-rules
+aws waf list-logging-configurations
+aws waf list-regex-match-sets
+aws waf list-regex-pattern-sets
+aws waf list-rules
+aws waf list-web-acls
+aws waf list-xss-match-sets
+aws waf list-sql-injection-match-sets
+
+#aws worklink(looks like not active yet)
+
+#aws worklink list-fleets
+
+#aws workmail
+
+aws workmail list-organizations
+
+#aws xray
+aws xray get-groups
+
+#aws ses
+
+aws ses list-configuration-sets
+aws ses list-custom-verification-email-templates
+aws ses list-receipt-filters
+aws ses list-receipt-rule-sets
+aws ses list-templates
+
