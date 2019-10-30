@@ -75,7 +75,7 @@ for y in response.json()["value"]:
     print(colored("Output of "+resourcevalue+"\n",'green',attrs=['dark']))
     response=requests.get(resourcevalue,headers=headers)
     finalresponse=response.text
-    print finalresponse
+    pprint.pprint(finalresponse)
     if args.logs==True:
         f.write(finalresponse)
 

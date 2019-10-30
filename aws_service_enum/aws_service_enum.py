@@ -47,15 +47,15 @@ parser.parse_args(args=None if sys.argv[1:] else ['--help'])
 args = parser.parse_args()
 # OS Shell to run command directly
 if args.command:
-    print colored("Command Output: ",'blue',attrs=['dark']) + args.command
+    print(colored("Command Output: ",'blue',attrs=['dark']) + args.command)
     a=os.popen("aws configure set aws_access_key_id "+args.access_key)
     a=os.popen("aws configure set aws_secret_access_key "+args.secret_key)
     a=os.popen("aws configure set aws_session_token "+args.session_token)
     f = os.popen(args.command) 
-    #print "AWS_ACCESS_KEY="+args.access_key+" AWS_SECRET_KEY="+args.secret_key+" AWS_SESSION_TOKEN="+args.session_token+" "+args.command
+    #pprint.pprint()"AWS_ACCESS_KEY="+args.access_key+" AWS_SECRET_KEY="+args.secret_key+" AWS_SESSION_TOKEN="+args.session_token+" "+args.command)
     #f = os.popen("sudo AWS_ACCESS_KEY="+args.access_key+" AWS_SECRET_KEY="+args.secret_key+" AWS_SESSION_TOKEN="+args.session_token+" "+args.command)
     for line in f.readlines(): 
-        print line
+        pprint.pprint(line)
     sys.exit()
 
 #Start Time of Script
@@ -83,13 +83,13 @@ if args.logs == True:
 
 
 def enumeration(region,services):
-    print colored("Enumerating for region: "+region,'blue',attrs=['dark'])
+    print(colored("Enumerating for region: "+region,'blue',attrs=['dark']))
     if args.logs==True:
         f.write("Enumerating for region: "+region+"\n")
     for service in services:
         service_name = "aws_"+service
         service_name= session.client(service)
-        print colored("Running checks for AWS "+ service,'blue',attrs=['dark'])
+        print(colored("Running checks for AWS "+ service,'blue',attrs=['dark']))
         if args.logs==True:
             f.write("Running checks for AWS "+ service+"\n")
         for x in lines:
@@ -100,31 +100,31 @@ def enumeration(region,services):
                 try:
                     method_to_call = getattr(service_name,functionname)
                     response = method_to_call()
-                    print colored('Output of AWS '+y[1]+' -->'+y[2],'green',attrs=['dark'])
-                    #print response
+                    print(colored('Output of AWS '+y[1]+' -->'+y[2],'green',attrs=['dark']))
+                    #pprint.pprint(response)
                     pprint.pprint(response)
                     if args.logs==True:
                         f.write("Output of AWS "+y[1]+" -->"+y[2]+"\n")
                         f.write(str(response)+"\n")
                 except Exception as e:
-                    print e #only for debugging response
+                    #pprint.pprint(e) #only for debugging response
                     if args.verbose == True and "AccessDenied" in str(e):
-                        print "AWS "+y[1]+" -->"+y[2]+": "+colored("Access Denied",'red',attrs=['dark'])
+                        print("AWS "+y[1]+" -->"+y[2]+": "+colored("Access Denied",'red',attrs=['dark']))
                         if args.logs==True:
                             f.write("AWS "+y[1]+" -->"+y[2]+": Access Denied\n")
                     elif "AuthorizationError" in str(e) and args.verbose == True:
-                        print "AWS "+y[1]+" -->"+y[2]+": "+colored("Access Denied",'red',attrs=['dark'])
+                        print("AWS "+y[1]+" -->"+y[2]+": "+colored("Access Denied",'red',attrs=['dark']))
                         if args.logs==True:
                             f.write("AWS "+y[1]+" -->"+y[2]+": Access Denied\n")
 
-    print "Total Number of services covered: "+str(len(services))
+    pprint.pprint("Total Number of services covered: "+str(len(services)))
     if args.logs==True:
         f.write("Total Number of services covered: "+str(len(services))+"\n")
     #s3 enumeration workflow start here
     if args.s3_enumeration == True:
         client = session.client('sts')
         response = client.get_caller_identity()
-        #print response
+        #pprint.pprint(response)
         account_id=response["Account"]
         s3 = session.resource('s3')
         for services in s3_enumeration_patterns:
@@ -133,14 +133,14 @@ def enumeration(region,services):
                 words=[w.replace('ACCOUNTID', account_id) for w in words]
                 words=[w.replace('REGIONNAME', region) for w in words]
                 bucketname="-".join(words)
-                #print bucketname
+                #pprint.pprint(bucketname)
                 my_bucket = s3.Bucket(bucketname)
                 try:
                     response=my_bucket.objects.all()
                     if "NoSuchBucket" in response:
                         pass
                     else:
-                        print colored("aws s3 ls s3://"+bucketname, "green")
+                        print(colored("aws s3 ls s3://"+bucketname, "green"))
                         if args.logs==True:
                             f.write("aws s3 ls s3://"+bucketname+"\n")
                     for obj in my_bucket.objects.all():
@@ -159,7 +159,7 @@ if args.region in regions:
         #generating temporary credentials(Valid for 1 hour)
         #client = session.client('sts')
         #credentials = client.get_session_token()
-        #print credentials["Credentials"]["AccessKeyId"]
+        #pprint.pprint(credentials["Credentials"]["AccessKeyId"])
         #session = boto3.Session(aws_access_key_id=credentials["Credentials"]["AccessKeyId"],aws_secret_access_key=credentials["Credentials"]["SecretAccessKey"], region_name=args.region)
         enumeration(args.region,services)
 elif args.region_all:
@@ -171,7 +171,7 @@ elif args.region_all:
         #generating temporary credentials(Valid for 1 hour)
         #client = session.client('sts')
         #credentials = client.get_session_token()
-        #print credentials
+        #pprint.pprint(credentials)
         for region in regions:
             #session = boto3.Session(aws_access_key_id=credentials["Credentials"]["AccessKeyId"],aws_secret_access_key=credentials["Credentials"]["SecretAccessKey"], region_name=region)
             session = boto3.Session(aws_access_key_id=args.access_key,aws_secret_access_key=args.secret_key, region_name=region)
@@ -186,18 +186,18 @@ else:
         #generating temporary credentials(Valid for 1 hour)
         #client = session.client('sts')
         #credentials = client.get_session_token()
-        #print credentials
+        #pprint.pprint(credentials)
         for region in regions:
             enumeration(region,services)
 
 
-print "Start Time(UTC): " + str(starttime)
+pprint.pprint("Start Time(UTC): " + str(starttime))
 #Create a log file
 if args.logs == True:
     f.write("Start Time(UTC): " + str(starttime)+"\n")
 
 endtime=str(datetime.utcnow())
-print "End Time(UTC): " + endtime
+pprint.pprint("End Time(UTC): " + endtime)
 if args.logs==True:
     f.write("End Time(UTC): " + endtime+"\n")
     f.close()
