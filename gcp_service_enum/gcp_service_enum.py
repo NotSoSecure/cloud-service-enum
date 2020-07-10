@@ -52,7 +52,7 @@ for i in d:
             pass
 #print c
 result=c.keys()
-result.sort()
+sorted(result)
 #print result
 
 #Start Time of Script
@@ -170,7 +170,7 @@ for key in gcpfunctions:
                         print(colored("Access Denied: "+key+" for region: "+region+"\n",'red',attrs=['dark']))
                         if args.logs==True:
                             f.write("Access Denied: "+key+" for region: "+region+"\n")
-    elif gcpfunctions[key].has_key('zoneRequired')==1:
+    elif "zoneRequired" in gcpfunctions[key]:
     #elif gcpfunctions[key]["zoneRequired"]=="True":
         for zone in zones:
             try:
