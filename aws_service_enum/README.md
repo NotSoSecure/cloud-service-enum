@@ -1,59 +1,50 @@
-
-`AWS_SERVICE_ENUM` let you discover aws services which a following set of credentials has access to (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_SESSION_TOKEN`) and then checks for associated buckets to discovered services. 
-
 This tool is helpful in scenarios where you got AWS credentials (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_SESSION_TOKEN`) through SSRF or any other vulnerability, but you are not sure if given credentials have access to other services or not. Instead of just trying for top 10 aws services (s3, ec2, etc), you can run this tool and it will let you enumerate through each non-intrusive(For example, only listing buckets, this tool won't be creating/modifying bucket) feature of each service. 
 
 ## Requirements
 
-* `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_SESSION_TOKEN`
 * `pip install -r requirements.txt`
 
 ## Usage
 
 ~~~
-usage: aws_service_enum.py [-h] --access-key --secret-key --session-token
-                   [--region] [--verbose] [--s3-enumeration] [--logs]
+usage: aws_enum_services.py [-h] [--access-key ACCESS_KEY] [--secret-key SECRET_KEY] [--session-token SESSION_TOKEN]
+                            [--list-services]
+                            [--services {ec2,s3,rds,lambda,cloudfront,dynamodb,iam,sns,sqs,ecr,elasticbeanstalk,route53,cloudwatch,codepipeline,sagemaker,secretsmanager,glue,stepfunctions,eks,cloudtrail,kinesis,redshift,elasticache,apigateway,cloudformation,appsync,ssm,elastictranscoder,datapipeline,mediaconvert,storagegateway,workspaces,cloud9,lex-models,iot,medialive,datasync,emr,athena,pinpoint,efs,mediapackage,mq,organizations,detective,opsworks,codecommit,appmesh,backup,mediapackage-vod,mediastore} [{ec2,s3,rds,lambda,cloudfront,dynamodb,iam,sns,sqs,ecr,elasticbeanstalk,route53,cloudwatch,codepipeline,sagemaker,secretsmanager,glue,stepfunctions,eks,cloudtrail,kinesis,redshift,elasticache,apigateway,cloudformation,appsync,ssm,elastictranscoder,datapipeline,mediaconvert,storagegateway,workspaces,cloud9,lex-models,iot,medialive,datasync,emr,athena,pinpoint,efs,mediapackage,mq,organizations,detective,opsworks,codecommit,appmesh,backup,mediapackage-vod,mediastore} ...]]
+                            [--region REGION [REGION ...]] [--thread THREAD] [--output-file OUTPUT_FILE]
 
-< AWS_SERVICE_ENUM Says "Hello, world!" >
- ---------------
-        \   ^__^
-         \  (oo)\_______
-            (__)\       )\/
-                ||----w |
-                ||     ||
-
-required arguments:
-  --access-key     AWS Access Key ID
-  --secret-key     AWS Secret Key
-  --session-token  AWS Security Token
-
-optional arguments:
-  -h, --help         show this help message and exit
-  --region         Enter any value from given list
-                     ap-northeast-1, ap-northeast-2, ap-northeast-3, ap-southeast-1, ap-southeast-2, ap-south-1
-                     ca-central-1
-                     eu-central-1, eu-west-1, eu-west-2, eu-west-3, eu-north-1
-                     us-east-1, us-east-2, us-west-1, us-west-2
-                     sa-east-1
-  --verbose          Select for Verbose output
-  --s3-enumeration   Enumerate possible S3 buckets associated with services like ElasticBeanstalk, Athena
-  --logs             Create a log File
-  ~~~
+options:
+  -h, --help            show this help message and exit
+  --access-key ACCESS_KEY
+                        Provide Access key
+  --secret-key SECRET_KEY
+                        Provide Secrect Key
+  --session-token SESSION_TOKEN
+                        Provide session token if available
+  --list-services       Provide list of services
+  --services {ec2,s3,rds,lambda,cloudfront,dynamodb,iam,sns,sqs,ecr,elasticbeanstalk,route53,cloudwatch,codepipeline,sagemaker,secretsmanager,glue,stepfunctions,eks,cloudtrail,kinesis,redshift,elasticache,apigateway,cloudformation,appsync,ssm,elastictranscoder,datapipeline,mediaconvert,storagegateway,workspaces,cloud9,lex-models,iot,medialive,datasync,emr,athena,pinpoint,efs,mediapackage,mq,organizations,detective,opsworks,codecommit,appmesh,backup,mediapackage-vod,mediastore} [{ec2,s3,rds,lambda,cloudfront,dynamodb,iam,sns,sqs,ecr,elasticbeanstalk,route53,cloudwatch,codepipeline,sagemaker,secretsmanager,glue,stepfunctions,eks,cloudtrail,kinesis,redshift,elasticache,apigateway,cloudformation,appsync,ssm,elastictranscoder,datapipeline,mediaconvert,storagegateway,workspaces,cloud9,lex-models,iot,medialive,datasync,emr,athena,pinpoint,efs,mediapackage,mq,organizations,detective,opsworks,codecommit,appmesh,backup,mediapackage-vod,mediastore} ...]
+                        Services that need to be enumerated
+  --region REGION [REGION ...]
+                        Provide regions, eg --region us-east-1, eu-north-1
+  --thread THREAD, -t THREAD
+                        Treading count
+  --output-file OUTPUT_FILE, -o OUTPUT_FILE
+                        json output in file
+~~~
   
 Most of the options are pretty self-explanatory, however, I would like to draw your attention towards the following 3 options: 
 
 `--region` this will allow you to specify a default region. If no region is selected it will enumerate over all regions. 
   
-`--logs` creates a log file in the same directory. 
+`--output-file` saves the results in json format
   
-`--s3-enumeration` is quite interesting feature here. In our earlier research on [AWS Beanstalk](https://www.notsosecure.com/exploiting-ssrf-in-aws-elastic-beanstalk/) we discovered that AWS by default uses naming patters while creating a bucket. 
+`--service` provide specific service that you want to enumerate 
   
-For example, if you create a elasticbeanstalk service then AWS will create a bucket like `elasticbeanstalk-REGIONNAME-ACCOUNTID`, where REGIONNAME is region of elastic beanstalk and ACCOUNTID is account id of the role. 
- 
-`--s3-enumeration` will list all buckets which discovered service has access to but are not accessible directly. For example, if you discovered elasticbeanstalk credentials through SSRF, if you use same credentials to do `aws s3 ls`, it will not list associated buckets to service. But if you use `--s3-enumeration`, it will try to guess the bucket and if there is a bucket, it will list(only list) out the content of the bucket as well. 
+You can run `--list-services` to list all the available service that this tool currently can enumerate
 
 ## Sample Output
 
 ![](/Sample_Output/aws_service_enum_sample_output.png)
 
+## Author
 
+* [Raunak Parmar](https://www.linkedin.com/in/trouble1raunak/)

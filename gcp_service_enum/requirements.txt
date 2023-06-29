@@ -1,3 +1,4 @@
-google-api-python-client
-google-auth
-termcolor
+google-cloud-storage==1.42.0
+google-cloud-logging==2.6.0
+google-cloud-compute
+google-cloud-functions==2.6.0

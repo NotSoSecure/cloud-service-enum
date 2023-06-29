@@ -1,2 +1,5 @@
-termcolor
+tabulate
+crayons
+prettytable
 boto3
+requests

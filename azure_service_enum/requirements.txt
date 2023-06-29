@@ -1,1 +1,3 @@
-termcolor
+requests
+tabulate
+crayons
