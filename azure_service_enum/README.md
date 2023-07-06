@@ -8,7 +8,7 @@ This tool is helpful in scenarios where you got “ARM access token” through c
 ## Usage
 
 ~~~
-usage: azure_enum_services.py [-h] --access-token ACCESS_TOKEN [--output-file OUTPUT_FILE]
+usage: azure_service_enum.py [-h] --access-token ACCESS_TOKEN [--output-file OUTPUT_FILE]
 
 options:
   -h, --help            show this help message and exit
