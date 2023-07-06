@@ -7,7 +7,7 @@ This tool is helpful in scenarios where you got AWS credentials (`AWS_ACCESS_KEY
 ## Usage
 
 ~~~
-usage: aws_service_enum.py [-h] [--access-key ACCESS_KEY] [--secret-key SECRET_KEY] [--session-token SESSION_TOKEN]
+usage: aws_enum_services.py [-h] [--access-key ACCESS_KEY] [--secret-key SECRET_KEY] [--session-token SESSION_TOKEN]
                             [--list-services]
                             [--services {ec2,s3,rds,lambda,cloudfront,dynamodb,iam,sns,sqs,ecr,elasticbeanstalk,route53,cloudwatch,codepipeline,sagemaker,secretsmanager,glue,stepfunctions,eks,cloudtrail,kinesis,redshift,elasticache,apigateway,cloudformation,appsync,ssm,elastictranscoder,datapipeline,mediaconvert,storagegateway,workspaces,cloud9,lex-models,iot,medialive,datasync,emr,athena,pinpoint,efs,mediapackage,mq,organizations,detective,opsworks,codecommit,appmesh,backup,mediapackage-vod,mediastore} [{ec2,s3,rds,lambda,cloudfront,dynamodb,iam,sns,sqs,ecr,elasticbeanstalk,route53,cloudwatch,codepipeline,sagemaker,secretsmanager,glue,stepfunctions,eks,cloudtrail,kinesis,redshift,elasticache,apigateway,cloudformation,appsync,ssm,elastictranscoder,datapipeline,mediaconvert,storagegateway,workspaces,cloud9,lex-models,iot,medialive,datasync,emr,athena,pinpoint,efs,mediapackage,mq,organizations,detective,opsworks,codecommit,appmesh,backup,mediapackage-vod,mediastore} ...]]
                             [--region REGION [REGION ...]] [--thread THREAD] [--output-file OUTPUT_FILE]

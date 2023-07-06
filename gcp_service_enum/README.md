@@ -7,7 +7,7 @@
 
 ## Usage
 ~~~
-usage: gcp_service_enum.py [-h] -f F [--output-file OUTPUT_FILE]
+usage: gcp_enum_services.py [-h] -f F [--output-file OUTPUT_FILE]
 
 options:
   -h, --help            show this help message and exit
