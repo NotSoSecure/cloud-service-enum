@@ -1,4 +1,6 @@
-google-cloud-storage==1.42.0
-google-cloud-logging==2.6.0
-google-cloud-compute
-google-cloud-functions==2.6.0
+crayons 
+tabulate 
+google-cloud-resource-manager==0.30.5 
+google-cloud-compute 
+google-cloud-functions 
+google-cloud-storage
