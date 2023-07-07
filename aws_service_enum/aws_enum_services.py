@@ -23,9 +23,7 @@ args = parser.parse_args()
 
 
 json_body = {}
-# access_key = "AKIA3FT5IE3SKVIPQ7XW"
-# secret_key = "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"
-# session_token = ""
+
 if args.thread:
     Thread_Count = int(args.thread)
 else:
@@ -119,6 +117,33 @@ def describe_ec2_instances():
   
     print(crayons.green("[+] " + started, bold=True), "\r\n" ,tabulate(instance_data, headers=['Instance ID', 'Instance State', 'Instance Type', 'Launch Time', 'Region'], tablefmt='psql'))
 
+def describe_vpcs():
+    started = "List VPCs:"
+    vpc_data = []
+
+    def describe_vpcs_in_region(region):
+        ec2_client = get_client('ec2', region_name=region)
+        response = ec2_client.describe_vpcs()
+        vpcs = response['Vpcs']
+        for vpc in vpcs:
+            vpc_data.append([
+                vpc['VpcId'],
+                vpc['CidrBlock'],
+                vpc['State'],
+                region
+            ])
+   
+    processes = []
+    with ThreadPoolExecutor(max_workers=Thread_Count) as executor:
+        for region in regions:
+            processes.append(executor.submit(describe_vpcs_in_region, region))
+
+    if vpc_data == []:
+        print(crayons.yellow("[!] " + started + " (Empty!)", bold=True))
+        return
+
+    print(crayons.green("[+] " + started, bold=True))
+    print(tabulate(vpc_data, headers=['VPC ID', 'CIDR Block', 'State', 'Region'], tablefmt='psql'))
 
 
 def list_s3_buckets():
@@ -1302,8 +1327,9 @@ def list_cloudformation_change_sets():
         try:
             response = cloudformation_client.list_change_sets(StackName=stack_name)
         except ClientError as e:
+            #print(e)
             error_message = e.response['Error']['Message']
-            print(crayons.red(f"Error retrieving change sets: {error_message} ({region})", bold=True))
+            #print(crayons.red(f"Error retrieving change sets: {error_message} ({region})", bold=True))
             return
             
 
@@ -1427,71 +1453,183 @@ def list_mediastore_containers():
         return
     print(crayons.green("[+] " + started, bold=True), "\r\n", tabulate(container_data, headers=['Container Name', 'Status', 'Creation Time', 'Region'], tablefmt='psql'))
 
+def describe_snapshots():
+    started = "List EBS Snapshots:"
+    snapshot_data = []
+
+    def describe_snapshots_in_region(region):
+        ec2_client = get_client('ec2', region_name=region)
+        response = ec2_client.describe_snapshots(OwnerIds=['self'])
+        snapshots = response['Snapshots']
+
+        for snapshot in snapshots:
+            snapshot_data.append([
+                snapshot['SnapshotId'],
+                snapshot['VolumeId'],
+                snapshot['StartTime'],
+                snapshot['State'],
+                region
+            ])
+
+    processes = []
+    with ThreadPoolExecutor(max_workers=Thread_Count) as executor:
+        for region in regions:
+            processes.append(executor.submit(describe_snapshots_in_region, region))
+
+    if snapshot_data == []:
+        print(crayons.yellow("[!] " + started + " (Empty!)", bold=True))
+        return
+
+    print(crayons.green("[+] " + started, bold=True))
+    print(tabulate(snapshot_data, headers=['Snapshot ID', 'Volume ID', 'Start Time', 'State', 'Region'], tablefmt='psql'))
+
+
+def describe_subnets():
+    started = "List Subnets:"
+    subnet_data = []
+
+    def describe_subnets_in_region(region):
+        ec2_client = get_client('ec2', region_name=region)
+        response = ec2_client.describe_subnets()
+        subnets = response['Subnets']
+
+        for subnet in subnets:
+            subnet_data.append([
+                subnet['SubnetId'],
+                subnet['VpcId'],
+                subnet['CidrBlock'],
+                subnet['AvailabilityZone'],
+                region
+            ])
+
+    processes = []
+    with ThreadPoolExecutor(max_workers=Thread_Count) as executor:
+        for region in regions:
+            processes.append(executor.submit(describe_subnets_in_region, region))
+
+    if subnet_data == []:
+        print(crayons.yelow("[!] " + started + " (Empty!)", bold=True))
+        return
+
+    headers = ['Subnet ID', 'VPC ID', 'CIDR Block', 'Availability Zone', 'Region']
+    print(crayons.green("[+] " + started, bold=True))
+    print(tabulate(subnet_data, headers=headers, tablefmt='psql'))
+
+
+def describe_volumes():
+    started = "List EBS Volumes:"
+    volume_data = []
+
+    def describe_volumes_in_region(region):
+        ec2_client = boto3.client('ec2', region_name=region)
+        response = ec2_client.describe_volumes()
+        volumes = response['Volumes']
+
+        for volume in volumes:
+            volume_data.append([
+                volume['VolumeId'],
+                volume['Size'],
+                volume['AvailabilityZone'],
+                volume['State'],
+                region
+            ])
+    processes = []
+    with ThreadPoolExecutor(max_workers=Thread_Count) as executor:
+        for region in regions:
+            processes.append(executor.submit(describe_volumes_in_region, region))
+
+    if volume_data == []:
+        print(crayons.yellow("[!] " + started + " (Empty!)", bold=True))
+        return
+
+    headers = ['Volume ID', 'Size (GiB)', 'Availability Zone', 'State', 'Region']
+    print(crayons.green("[+] " + started, bold=True))
+    print(tabulate(volume_data, headers=headers, tablefmt='psql'))
+
+def describe_amis():
+    started = "List AMIs:"
+    ami_data = []
+
+    def describe_amis_in_region(region):
+       
+        ec2_client = get_client('ec2', region_name=region)
+        response = ec2_client.describe_images(Owners=['self'])
+        amis = response['Images']
+
+        for ami in amis:
+            ami_data.append([
+                ami['ImageId'],
+                ami['Name'],
+                ami['CreationDate'],
+                region
+            ])
+
+    processes = []
+    with ThreadPoolExecutor(max_workers=Thread_Count) as executor:
+        for region in regions:
+            processes.append(executor.submit(describe_amis_in_region, region))
+
+    if ami_data == []:
+        print(crayons.yellow("[!] " + started + " (Empty!)", bold=True))
+        return
+
+    headers = ['AMI ID', 'Name', 'Creation Date', 'Region']
+    print(crayons.green("[+] " + started, bold=True))
+    print(tabulate(ami_data, headers=headers, tablefmt='psql'))
+
+def describe_security_groups():
+    started = "List Security Groups:"
+    group_data = []
+
+    def describe_security_groups_in_region(region):
+        ec2_client = get_client('ec2', region_name=region)
+        response = ec2_client.describe_security_groups()
+        security_groups = response['SecurityGroups']
+
+        for group in security_groups:
+            group_data.append([
+                group['GroupId'],
+                group['GroupName'],
+                group['Description'],
+                region
+            ])
+
+    processes = []
+    with ThreadPoolExecutor(max_workers=Thread_Count) as executor:
+        for region in regions:
+            processes.append(executor.submit(describe_security_groups_in_region, region))
+
+    if group_data == []:
+        print(crayons.yellow("[!] " + started + " (Empty!)", bold=True))
+        return
+
+    headers = ['Group ID', 'Group Name', 'Description', 'Region']
+    print(crayons.green("[+] " + started, bold=True))
+    print(tabulate(group_data, headers=headers, tablefmt='psql'))
 
 
 services_list = {
-  "ec2": "describe_ec2_instances","s3": "list_s3_buckets","rds": "describe_rds_instances","lambda": "list_lambda_functions","cloudfront": "list_cloudfront_distributions","dynamodb": "list_dynamodb_tables","iam": "list_iam_users","sns": "list_sns_topics","sqs": "list_sqs_queues","ecr": "describe_ecr_repositories","elasticbeanstalk": "describe_elasticbeanstalk_applications","route53": "list_route53_hosted_zones","cloudwatch": "describe_cloudwatch_alarms","codepipeline": "list_codepipeline_pipelines","sagemaker": "list_sagemaker_notebooks","secretsmanager": "list_secretsmanager_secrets","glue": "list_glue_data_catalogs","stepfunctions": "list_stepfunctions_state_machines","eks": "list_eks_clusters","cloudtrail": "describe_cloudtrail_trails",
-  "kinesis": "list_kinesis_streams","redshift": "describe_redshift_clusters","elasticache": "describe_elasticache_clusters","apigateway": "list_apigateway_apis","cloudformation": "list_cloudformation_stacks","appsync": "list_appsync_apis","ssm": "list_ssm_documents","elastictranscoder": "list_elastictranscoder_pipelines","datapipeline": "list_datapipeline_pipelines","mediaconvert": "list_mediaconvert_jobs","storagegateway": "list_storagegateway_gateways","workspaces": "describe_workspaces","cloud9": "list_cloud9_environments","lex-models": "list_lex_bots","iot": "list_iot_things","medialive": "list_medialive_channels","datasync": "list_datasync_tasks","emr": "list_emr_clusters",
-  "athena": "list_athena_workgroups","pinpoint": "list_pinpoint_applications","efs": "list_efs_file_systems","mediapackage": "list_mediapackage_channels","mq": "list_mq_brokers","organizations": "list_organizations_accounts","detective": "list_detective_graphs","opsworks": "list_opsworks_stacks","codecommit": "list_codecommit_repositories","appmesh": "list_appmesh_meshes","backup": "list_backup_plans","mediapackage-vod": "list_mediapackage_vod_assets","mediastore": "list_mediastore_containers"
+  "ec2": "describe_ec2_instances","vpc":"describe_vpcs","s3": "list_s3_buckets","rds": "describe_rds_instances","lambda": "list_lambda_functions","cloudfront": "list_cloudfront_distributions","dynamodb": "list_dynamodb_tables","iam": "list_iam_users","sns": "list_sns_topics",
+  "sqs": "list_sqs_queues","ecr": "describe_ecr_repositories","elasticbeanstalk": "describe_elasticbeanstalk_applications","route53": "list_route53_hosted_zones","cloudwatch": "describe_cloudwatch_alarms","codepipeline": "list_codepipeline_pipelines","sagemaker": "list_sagemaker_notebooks",
+  "secretsmanager": "list_secretsmanager_secrets","glue": "list_glue_data_catalogs","stepfunctions": "list_stepfunctions_state_machines","eks": "list_eks_clusters","cloudtrail": "describe_cloudtrail_trails","kinesis": "list_kinesis_streams","redshift": "describe_redshift_clusters",
+  "elasticache": "describe_elasticache_clusters","apigateway": "list_apigateway_apis","cloudformation": "list_cloudformation_stacks","appsync": "list_appsync_apis","ssm": "list_ssm_documents","elastictranscoder": "list_elastictranscoder_pipelines","datapipeline": "list_datapipeline_pipelines",
+  "mediaconvert": "list_mediaconvert_jobs","storagegateway": "list_storagegateway_gateways","workspaces": "describe_workspaces","cloud9": "list_cloud9_environments","lex-models": "list_lex_bots","iot": "list_iot_things","medialive": "list_medialive_channels","datasync": "list_datasync_tasks",
+  "emr": "list_emr_clusters","athena": "list_athena_workgroups","pinpoint": "list_pinpoint_applications","efs": "list_efs_file_systems","mediapackage": "list_mediapackage_channels","mq": "list_mq_brokers","organizations": "list_organizations_accounts","detective": "list_detective_graphs",
+  "opsworks": "list_opsworks_stacks","codecommit": "list_codecommit_repositories","appmesh": "list_appmesh_meshes","backup": "list_backup_plans","mediapackage-vod": "list_mediapackage_vod_assets","mediastore": "list_mediastore_containers","Snapshots":"describe_snapshots","Subnet":"describe_subnets",
+  "Volumes":"describe_volumes","ami":"describe_amis","SecurityGroups":"describe_security_groups"
 }
 
 
 functions = [
-    describe_ec2_instances,
-    list_s3_buckets,
-    describe_rds_instances,
-    list_lambda_functions,
-    list_cloudfront_distributions,
-    list_dynamodb_tables,
-    list_iam_users,
-    list_sns_topics,
-    list_sqs_queues,
-    describe_ecr_repositories,
-    describe_elasticbeanstalk_applications,
-    list_route53_hosted_zones,
-    describe_cloudwatch_alarms,
-    list_codepipeline_pipelines,
-    list_sagemaker_notebooks,
-    list_secretsmanager_secrets,
-    list_glue_data_catalogs,
-    list_stepfunctions_state_machines,
-    list_eks_clusters,
-    describe_cloudtrail_trails,
-    list_kinesis_streams,
-    describe_redshift_clusters,
-    describe_elasticache_clusters,
-    list_apigateway_apis,
-    list_cloudformation_stacks,
-    list_appsync_apis,
-    list_ssm_documents,
-    list_elastictranscoder_pipelines,
-    list_datapipeline_pipelines,
-    list_mediaconvert_jobs,
-    list_storagegateway_gateways,
-    describe_workspaces,
-    list_cloud9_environments,
-    list_lex_bots,
-    list_iot_things,
-    list_medialive_channels,
-    list_datasync_tasks,
-    list_emr_clusters,
-    list_athena_workgroups,
-    list_pinpoint_applications,
-    list_efs_file_systems,
-    list_glue_crawlers,
-    list_datasync_locations,
-    list_mediapackage_channels,
-    list_mq_brokers,
-    list_organizations_accounts,
-    list_detective_graphs,
-    list_opsworks_stacks,
-    list_codecommit_repositories,
-    list_cloudformation_change_sets,
-    list_appmesh_meshes,
-    list_backup_plans,
-    list_mediapackage_vod_assets,
-    list_mediastore_containers    
+    describe_ec2_instances,describe_vpcs,list_s3_buckets,describe_rds_instances,list_lambda_functions,list_cloudfront_distributions,list_dynamodb_tables,list_iam_users,list_sns_topics,list_sqs_queues,describe_ecr_repositories,describe_elasticbeanstalk_applications,list_route53_hosted_zones,
+    describe_cloudwatch_alarms,list_codepipeline_pipelines,list_sagemaker_notebooks,list_secretsmanager_secrets,list_glue_data_catalogs,list_stepfunctions_state_machines,list_eks_clusters,describe_cloudtrail_trails,list_kinesis_streams,describe_redshift_clusters,
+    describe_elasticache_clusters,list_apigateway_apis,list_cloudformation_stacks,list_appsync_apis,list_ssm_documents,list_elastictranscoder_pipelines,list_datapipeline_pipelines,list_mediaconvert_jobs,list_storagegateway_gateways,describe_workspaces,list_cloud9_environments,
+    list_lex_bots,list_iot_things,list_medialive_channels,list_datasync_tasks,list_emr_clusters,list_athena_workgroups,list_pinpoint_applications,list_efs_file_systems,list_glue_crawlers,list_datasync_locations,list_mediapackage_channels,list_mq_brokers,list_organizations_accounts,
+    list_detective_graphs,list_opsworks_stacks,list_codecommit_repositories,list_cloudformation_change_sets,list_appmesh_meshes,list_backup_plans,list_mediapackage_vod_assets,list_mediastore_containers,describe_snapshots,
+    describe_subnets,describe_volumes,describe_amis,describe_security_groups
 ]
+
+
 
 def get_profile():
     profile = get_client("sts", region_name=None)
